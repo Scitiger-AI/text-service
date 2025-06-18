@@ -53,7 +53,7 @@ pip install -r requirements.txt
 #### 3. 启动API服务
 
 ```bash
-uvicorn app.main:app --reload
+uvicorn app.main:app --host 0.0.0.0 --port 8001  --reload
 ```
 
 #### 4. 启动Celery工作进程

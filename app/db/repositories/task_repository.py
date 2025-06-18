@@ -80,7 +80,8 @@ class TaskRepository:
         status: Optional[str] = None,
         model: Optional[str] = None,
         skip: int = 0,
-        limit: int = 10
+        limit: int = 10,
+        ordering: str = "-created_at"
     ) -> tuple[List[Dict[str, Any]], int]:
         """
         获取用户的任务列表
@@ -92,6 +93,7 @@ class TaskRepository:
             model: 模型名称（可选）
             skip: 跳过数量
             limit: 限制数量
+            ordering: 排序字段，'-'前缀表示降序，例如：'-created_at'表示按创建时间降序
             
         Returns:
             tuple: (任务列表, 总数)
@@ -109,8 +111,17 @@ class TaskRepository:
             # 查询总数
             total = await task_collection.count_documents(query)
             
+            # 处理排序
+            sort_field = ordering
+            sort_direction = -1  # 默认降序
+            
+            if ordering.startswith("-"):
+                sort_field = ordering[1:]
+            else:
+                sort_direction = 1  # 升序
+            
             # 查询数据
-            cursor = task_collection.find(query).sort("created_at", -1).skip(skip).limit(limit)
+            cursor = task_collection.find(query).sort(sort_field, sort_direction).skip(skip).limit(limit)
             
             # 转换结果
             tasks = []
@@ -130,7 +141,8 @@ class TaskRepository:
         status: Optional[str] = None,
         model: Optional[str] = None,
         skip: int = 0,
-        limit: int = 10
+        limit: int = 10,
+        ordering: str = "-created_at"
     ) -> tuple[List[Dict[str, Any]], int]:
         """
         获取租户的所有任务列表（不按用户过滤）
@@ -141,6 +153,7 @@ class TaskRepository:
             model: 模型名称（可选）
             skip: 跳过数量
             limit: 限制数量
+            ordering: 排序字段，'-'前缀表示降序，例如：'-created_at'表示按创建时间降序
             
         Returns:
             tuple: (任务列表, 总数)
@@ -158,8 +171,17 @@ class TaskRepository:
             # 查询总数
             total = await task_collection.count_documents(query)
             
+            # 处理排序
+            sort_field = ordering
+            sort_direction = -1  # 默认降序
+            
+            if ordering.startswith("-"):
+                sort_field = ordering[1:]
+            else:
+                sort_direction = 1  # 升序
+            
             # 查询数据
-            cursor = task_collection.find(query).sort("created_at", -1).skip(skip).limit(limit)
+            cursor = task_collection.find(query).sort(sort_field, sort_direction).skip(skip).limit(limit)
             
             # 转换结果
             tasks = []

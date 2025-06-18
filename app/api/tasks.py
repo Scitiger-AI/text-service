@@ -212,7 +212,8 @@ async def list_tasks(
             status=query.status,
             model=query.model,
             page=query.page,
-            page_size=query.page_size
+            page_size=query.page_size,
+            ordering=query.ordering
         )
         
         # 计算分页信息
@@ -226,6 +227,7 @@ async def list_tasks(
         if query.model:
             query_params.append(f"model={query.model}")
         query_params.append(f"page_size={query.page_size}")
+        query_params.append(f"ordering={query.ordering}")
         
         # 构建下一页URL
         next_url = None

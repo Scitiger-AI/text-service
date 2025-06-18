@@ -95,6 +95,10 @@ class AliyunProvider(ModelProvider):
         if "seed" in validated:
             validated["seed"] = int(validated["seed"])
             
+        # 处理enable_thinking参数
+        if "enable_thinking" not in validated:
+            validated["enable_thinking"] = False
+            
         return validated
       
     async def call_model(self, model: str, parameters: Dict[str, Any]) -> Dict[str, Any]:

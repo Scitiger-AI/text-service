@@ -118,7 +118,8 @@ class TaskService:
         status: Optional[str] = None,
         model: Optional[str] = None,
         page: int = 1,
-        page_size: int = 10
+        page_size: int = 10,
+        ordering: str = "-created_at"
     ) -> Tuple[List[Dict[str, Any]], int]:
         """
         获取用户的任务列表
@@ -130,6 +131,7 @@ class TaskService:
             model: 模型名称（可选）
             page: 页码
             page_size: 每页数量
+            ordering: 排序字段，'-'前缀表示降序，例如：'-created_at'表示按创建时间降序
             
         Returns:
             Tuple[List[Dict[str, Any]], int]: (任务列表, 总数)
@@ -142,7 +144,8 @@ class TaskService:
             status=status,
             model=model,
             skip=skip,
-            limit=page_size
+            limit=page_size,
+            ordering=ordering
         )
         
         # 转换任务数据
@@ -165,7 +168,8 @@ class TaskService:
         status: Optional[str] = None,
         model: Optional[str] = None,
         page: int = 1,
-        page_size: int = 10
+        page_size: int = 10,
+        ordering: str = "-created_at"
     ) -> Tuple[List[Dict[str, Any]], int]:
         """
         获取任务列表，支持按租户ID查询和按用户ID过滤
@@ -177,6 +181,7 @@ class TaskService:
             model: 模型名称（可选）
             page: 页码
             page_size: 每页数量
+            ordering: 排序字段，'-'前缀表示降序，例如：'-created_at'表示按创建时间降序
             
         Returns:
             Tuple[List[Dict[str, Any]], int]: (任务列表, 总数)
@@ -191,7 +196,8 @@ class TaskService:
                 status=status,
                 model=model,
                 page=page,
-                page_size=page_size
+                page_size=page_size,
+                ordering=ordering
             )
         else:
             # 否则按租户ID查询所有任务
@@ -201,7 +207,8 @@ class TaskService:
                 status=status,
                 model=model,
                 skip=skip,
-                limit=page_size
+                limit=page_size,
+                ordering=ordering
             )
             
             # 转换任务数据
@@ -209,10 +216,17 @@ class TaskService:
             for task in tasks:
                 task_list.append({
                     "task_id": task["_id"],
+                    "tenant_id": task["tenant_id"],
+                    "user_id": task["user_id"],
                     "status": task["status"],
-                    "model": task["model"],
                     "created_at": task["created_at"],
-                    "updated_at": task["updated_at"]
+                    "updated_at": task["updated_at"],
+                    "model": task["model"],
+                    "provider": task["provider"],
+                    "parameters": task["parameters"],
+                    "is_async": task["is_async"],
+                    # "result": task["result"],
+                    # "error": task["error"]
                 })
             
             return task_list, total 

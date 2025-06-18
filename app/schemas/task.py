@@ -73,6 +73,7 @@ class TaskQuery(BaseModel):
     model: Optional[str] = Field(default=None, description="模型名称")
     page: int = Field(default=1, description="页码", ge=1)
     page_size: int = Field(default=10, description="每页数量", ge=1, le=100)
+    ordering: str = Field(default="-created_at", description="排序字段，'-'前缀表示降序，例如：'-created_at'表示按创建时间降序")
     
     @model_validator(mode='after')
     def validate_status(self):
